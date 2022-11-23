@@ -1,4 +1,4 @@
-# Lab: Exploiting XXE using external entities to retrieve files
+# Lab: Exploiting XXE to perform SSRF attacks
 
 import requests
 import re
