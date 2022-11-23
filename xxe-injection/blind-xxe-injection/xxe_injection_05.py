@@ -1,4 +1,5 @@
 # Lab: Exploiting blind XXE to exfiltrate data using a malicious external DTD
+# This script will auto exploit as Portswigger will not make request to server other than their exploit server...
 
 import requests
 import re
