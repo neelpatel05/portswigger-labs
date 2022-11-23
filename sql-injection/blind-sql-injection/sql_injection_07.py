@@ -1,4 +1,4 @@
-# Lab: SQL injection UNION attack, retrieving multiple values in a single column
+# Lab: Blind SQL injection with conditional responses
 
 import requests
 import re
@@ -7,7 +7,7 @@ import bs4
 from requests.utils import requote_uri
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
-target_url = "https://0a400029042d2de0c011122e0040005c.web-security-academy.net"
+target_url = "https://0a5000d80402e87dc0639b8c002d0076.web-security-academy.net"
 
 r = requests.Session()
 proxies = {
