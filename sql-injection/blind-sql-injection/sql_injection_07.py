@@ -5,15 +5,8 @@ import re
 import sys
 import bs4
 from requests.utils import requote_uri
+import argparse
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
-
-target_url = "https://0a5000d80402e87dc0639b8c002d0076.web-security-academy.net"
-
-r = requests.Session()
-proxies = {
-    'https':'http://127.0.0.1:8080',
-    'http':'http://127.0.0.1:8080'
-}
 
 def sql_find_password_len(url, tracking_id, session_id):
     url = url
@@ -78,6 +71,19 @@ def get_tracking_id():
     else:
         print("[+] Error getting tracking id and session id")
         sys.exit(0)
+
+if __name__ == "__main__":
     
-tracking_id, session_id = get_tracking_id()
-sql_injection(tracking_id, session_id)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--host', type=str, required=True)
+    args = parser.parse_args()
+
+    r = requests.Session()
+    target_url = args.host
+    proxies = {
+        'https':'http://127.0.0.1:8080',
+        'http':'http://127.0.0.1:8080'
+    }
+
+    tracking_id, session_id = get_tracking_id()
+    sql_injection(tracking_id, session_id)

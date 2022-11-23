@@ -3,15 +3,9 @@
 import requests
 from requests.utils import requote_uri
 import sys
+import argparse
 
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
-
-r = requests.Session()
-target_url = "https://0a9a000c03b58eabc032376f00d6005c.web-security-academy.net"
-proxies = {
-    'https':'http://127.0.0.1:8080',
-    'http':'http://127.0.0.1:8080'
-}
 
 # Retrieve All Data exploiting SQLi
 def sql_injection():
@@ -32,4 +26,17 @@ def sql_injection():
         print("[+] Exploited")
         sys.exit(0)
 
-sql_injection()
+if __name__ == "__main__":
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--host', type=str, required=True)
+    args = parser.parse_args()
+
+    r = requests.Session()
+    target_url = args.host
+    proxies = {
+        'https':'http://127.0.0.1:8080',
+        'http':'http://127.0.0.1:8080'
+    }
+
+    sql_injection()

