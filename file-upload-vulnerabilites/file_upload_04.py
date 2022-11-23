@@ -1,4 +1,4 @@
-# Lab: Web shell upload via path traversal
+# Lab: Web shell upload via extension blacklist bypass
 
 import requests
 import re
